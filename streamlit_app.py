@@ -44,4 +44,4 @@ st.dataframe(my_data_rows)
 
 fruit_add = st.text_input('What fruit would you like information about?','jackfruit')
 st.write('Thanks for adding : ', fruit_add)
-#my_cur.execute("SELECT * from fruit_load_list")
+my_cur.execute("INSERT INTO fruit_load_list ('from streamlit')")
