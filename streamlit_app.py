@@ -21,6 +21,11 @@ def get_fruityvice_data():
   fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
   return fruityvice_normalized
 
+def get_fruit_load_list():
+  with my_cnx.cursor() as my_cur:
+    my_cur.execute("SELECT * from fruit_load_list")
+    return my_cur.fetchall()
+
 # Display the table on the page.
 my_fruit_list = pandas.read_csv("https://uni-lab-files.s3.us-west-2.amazonaws.com/dabw/fruit_macros.txt")
 my_fruit_list = my_fruit_list.set_index('Fruit')
@@ -41,14 +46,12 @@ try:
 except URLError as e:
     st.error()
 
-st.stop()
-my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
-my_cur = my_cnx.cursor()
-my_cur.execute("SELECT * from fruit_load_list")
-my_data_rows = my_cur.fetchall()
 st.text("The fruit list contains:")
-st.dataframe(my_data_rows)
+if st.button('GET fruit list'):
+  my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
+  my_data_rows = get_fruit_load_list()
+  st.dataframe(my_data_rows)
 
-fruit_add = st.text_input('What fruit would you like information about?','jackfruit')
-st.write('Thanks for adding : ', fruit_add)
-my_cur.execute("INSERT INTO fruit_load_list values ('from streamlit')")
+#fruit_add = st.text_input('What fruit would you like information about?','jackfruit')
+#st.write('Thanks for adding : ', fruit_add)
+#my_cur.execute("INSERT INTO fruit_load_list values ('from streamlit')")
