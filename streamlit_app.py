@@ -15,7 +15,11 @@ st.text('🥑🍞 Avocado Toast')
 
 st.header('🍌🥭 Build Your Own Fruit Smoothie 🥝🍇')
 
-
+def get_fruityvice_data():
+  fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+fruit_choice)
+  # write your own comment -what does the next line do? 
+  fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
+  return fruityvice_normalized
 
 # Display the table on the page.
 my_fruit_list = pandas.read_csv("https://uni-lab-files.s3.us-west-2.amazonaws.com/dabw/fruit_macros.txt")
@@ -31,11 +35,9 @@ try:
   if not fruit_choice:
     st.error("Please select a fruit to get information.")
   else:
-    fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+fruit_choice)
-    # write your own comment -what does the next line do? 
-    fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
+    back_from_function = get_fruityvice_data()
     # write your own comment - what does this do?
-    st.dataframe(fruityvice_normalized)
+    st.dataframe(back_from_function)
 except URLError as e:
     st.error()
 
